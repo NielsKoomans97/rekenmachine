@@ -2,22 +2,24 @@ const numButtons = document.querySelectorAll('.calc-button-num');
 const funcButtons = document.querySelectorAll('.calc-button-func');
 const calcButton = document.querySelector('#calculate');
 const invoer = document.querySelector('#invoer');
-const funcIcon = document.querySelector('#func-icon');
 
 let firstNum = '';
 let secondNum = '';
 let func = '';
 let result = 0;
+let memory = [];
 
 numButtons.forEach(button => {
     button.addEventListener('click', () => {
         if (func == '') {
             firstNum += button.innerText;
             invoer.value = firstNum;
+            memory.push(firstNum);
         }
         else {
             secondNum += button.innerText;
             invoer.value = secondNum;
+            memory.push(secondNum);
         }
     });
 });
@@ -27,7 +29,7 @@ funcButtons.forEach(button => {
         func = button.innerText;
         invoer.value = '0';
 
-        if (secondNum != ''){
+        if (secondNum != '') {
             result = calculate();
             invoer.value = result;
         }
@@ -42,17 +44,29 @@ calcButton.addEventListener('click', () => {
 function calculate() {
     let calcResult = 0;
 
-    if (firstNum == '' || secondNum == '' || func == '') {
+    if (firstNum == '' || func == ''){
         return;
+    }
+
+    if(secondNum == ''){
+        secondNum = memory[memory.length - 1];
     }
 
     switch (func) {
         case '+':
-            calcResult = parseInt(firstNum) + parseInt(secondNum);
+            calcResult = parseFloat(firstNum) + parseFloat(secondNum);
             break;
 
         case '-':
-            calcResult = parseInt(firstNum) - parseInt(secondNum);
+            calcResult = parseFloat(firstNum) - parseFloat(secondNum);
+            break;
+
+        case '/':
+            calcResult = parseFloat(firstNum) / parseFloat(secondNum);
+            break;
+
+        case '*':
+            calcResult = parseFloat(firstNum) * parseFloat(secondNum);
             break;
     }
 
